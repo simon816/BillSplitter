@@ -1,0 +1,9 @@
+Options -Indexes
+
+RewriteEngine On
+
+RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+RewriteRule ^(.*)$ public/$1 [QSA,END]
+
+RewriteCond %{REQUEST_FILENAME} !index\.php
+RewriteRule ^(.+)$ index.php?route=$1 [QSA,L]

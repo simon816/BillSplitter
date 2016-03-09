@@ -1,0 +1,16 @@
+label, input {
+    display: block;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    margin: 5px 0px;
+    padding: 3px;
+}
+
+input[type="submit"] {
+    margin-top: 10px;
+}
+
+.error {
+    color: red;
+}

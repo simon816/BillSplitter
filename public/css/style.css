@@ -1,0 +1,54 @@
+body {
+    font-family: sans-serif;
+    margin: auto;
+    width: 80%;
+}
+
+header {
+    margin-top: 40px;
+}
+
+.topbar {
+    background-color: #dbdbdb;
+    height: 40px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    position: fixed;
+    z-index: 1000;
+}
+
+.menu {
+    margin: 0px 10%;
+    vertical-align: middle;
+}
+
+.menu-item {
+    display: inline-block;
+    padding: 10px;
+    margin: 0 5px;
+    color: #000;
+    text-shadow: 1px 1px #f0f0f0;
+}
+
+a.menu-item {
+    text-decoration: none;
+}
+
+.menu-item:hover {
+    background-color: #cbcbcb;
+}
+
+.menu-right {
+    float: right;
+    margin-right: 10px;
+}
+
+#body-content {
+    margin: 50px 10px 10px;
+}
+
+button, input[type="submit"] {
+    border-radius: 3px;
+    background: #ddd;
+}

@@ -1,0 +1,22 @@
+{% title= Register %}
+{# head=
+    <link href="{% url /css/auth.css %}" rel="stylesheet" type="text/css">
+    <script src="{% url /js/auth.js %}"></script>
+#}
+{# body=
+
+    <form action="{% url /auth/register %}" method="POST" id="regform">
+        <label for="name">Name: </label>
+        <div class="error" id="nameError">{% =error.name %}</div>
+        <input type="text" id="name" name="name" value="{% =form.name %}">
+        <label for="email">Email: </label>
+        <div class="error" id="emailError">{% =error.email %}</div>
+        <input type="email" id="email" name="email" value="{% =form.email %}">
+        <label for="password">Password: </label>
+        <div class="error" id="passwordError">{% =error.password %}</div>
+        <input type="password" id="password" name="password">
+        <input type="submit" value="Register">
+    </form>
+
+#}
+{% include layout_unauth %}

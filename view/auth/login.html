@@ -1,0 +1,19 @@
+{% title= Login %}
+{# head=
+    <link href="{% url /css/auth.css %}" rel="stylesheet" type="text/css">
+    <script src="{% url /js/auth.js %}"></script>
+#}
+{# body=
+
+    <form action="{% url /auth/login %}" method="POST" id="loginform">
+        <label for="email">Email: </label>
+        <div class="error" id="emailError">{% =error.email %}</div>
+        <input type="email" id="email" name="email" value="{% =form.email %}">
+        <label for="password">Password: </label>
+        <div class="error" id="passwordError">{% =error.password %}</div>
+        <input type="password" id="password" name="password">
+        <input type="submit" value="Login">
+    </form>
+
+#}
+{% include layout_unauth %}

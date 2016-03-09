@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{% =title %}</title>
+        <meta charset="UTF-8">
+        <link href="{% url /css/style.css %}" rel="stylesheet" type="text/css">
+        <script>
+            window.ROOT = '{% url / %}';
+        </script>
+        <script src="{% url /js/jquery.js %}"></script>
+        {% =head|html %}
+    </head>
+    <body>
+        <header>
+            <div class="topbar">
+                <nav class="menu">
+                    <div>
+                    <a class="menu-item" href="{% url / %}">Home</a>
+                    {% =html.navbar|html %}
+                    <div class="menu-right">
+                        {% =html.navbar_right|html %}
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <div id="body-content">
+        {% =body|html %}
+        </div>
+    </body>
+</html>

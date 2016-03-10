@@ -22,9 +22,8 @@ class AuthController extends App\Controller {
             case 'logout':
                 $this->handleLogout();
                 return true;
-            default:
-                return false;
         }
+        return parent::handleAction($action, $args);
     }
 
     private function handleLogin() {

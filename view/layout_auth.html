@@ -1,9 +1,11 @@
 {# html.navbar=
+    <a class="menu-item" href="{% url /household %}">Household</a>
     <a class="menu-item" href="{% url /bills %}">My Bills</a>
-    <a class="menu-item" href="{% url /bills/setup %}">Setup Bill</a>
-    <a class="menu-item" href="{% url /payment/history %}">History</a>
+    <a class="menu-item" href="{% url /bill/setup %}">Setup Bill</a>
+    <a class="menu-item" href="{% url /payment/history %}">Payment History</a>
 #}
 {# html.navbar_right=
+    <div class="user-welcome">Welcome, {% =user %}</div>
     <a class="menu-item" href="{% url /settings %}">Settings</a>
     <a class="menu-item" href="{% url /auth/logout %}">Logout</a>
 #}

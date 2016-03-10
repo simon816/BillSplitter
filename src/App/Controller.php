@@ -33,8 +33,12 @@ abstract class Controller {
             $parts[] = '';
         }
         list($action, $args) = $parts;
-        if (!$this->handleAction($action, $args)) {
-            $this->handleError(404, "Unknown action '{$action}'");
+        try {
+            if (!$this->handleAction($action, $args)) {
+                $this->handleError(404, "Unknown action '{$action}'");
+            }
+        } catch (\Exception $e) {
+            $this->fail($e);
         }
     }
 
@@ -71,7 +75,7 @@ abstract class Controller {
 
     protected function handleDefaultGet() {
         if ($this->template != null) {
-            $this->output($this->renderTemplate($this->template, $this->getTemplateVars()));
+            $this->output($this->renderTemplate($this->template));
         } else {
             $this->ensureGet();
         }
@@ -82,19 +86,47 @@ abstract class Controller {
     }
 
     protected function renderTemplate($template, array $vars = array()) {
+        $vars = array_merge($this->getGlobalVars(), $vars);
         return Template::renderTemplate($template, $vars);
     }
 
-    protected function getTemplateVars() {
-        return array();
+    protected function getGlobalVars() {
+        $userId = AuthManager::getUserId();
+        $user = $userId !== null ? \UserManager::get($userId) : null;
+        return array(
+            'user' => $user
+        );
     }
 
     protected function handleError($code, $message = "") {
         ErrorHandler::exitNow($code, $message);
     }
 
+    protected function fail(\Exception $e, $code = 500) {
+        $this->handleError($code, $e->getMessage());
+    }
+
+    protected function failJson(\Exception $e, $code = 500) {
+        http_response_code($code);
+        $this->outputJson(array('error' =>
+            array('message' => $e->getMessage(), 'code' => $e->getCode(), 'type' => get_class($e))
+        ));
+        exit;
+    }
+
     protected function output($data) {
         echo $data;
+    }
+
+    protected function outputJson($data) {
+        header('Content-Type: application/json');
+        $this->output(json_encode($data));
+    }
+
+    protected function checkSuccessJson($ensureTrue, $errorMessage) {
+        if ($ensureTrue !== true) {
+            $this->failJson(new \Exception($errorMessage));
+        }
     }
 
     protected function redirect($path, $code = 302) {
@@ -138,6 +170,10 @@ abstract class Controller {
             }
         }
         return $value;
+    }
+
+    protected function loadModel($modelName) {
+        return new $modelName(\Database::getInstance());
     }
 
 }

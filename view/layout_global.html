@@ -4,10 +4,9 @@
         <title>{% =title %}</title>
         <meta charset="UTF-8">
         <link href="{% url /css/style.css %}" rel="stylesheet" type="text/css">
-        <script>
-            window.ROOT = '{% url / %}';
-        </script>
+        <script>window.ROOT = '{% url / %}';</script>
         <script src="{% url /js/jquery.js %}"></script>
+        <script src="{% url /js/global.js %}"></script>
         {% =head|html %}
     </head>
     <body>
@@ -23,6 +22,7 @@
                 </nav>
             </div>
         </header>
+        <div id="messageArea"></div>
         <div id="body-content">
         {% =body|html %}
         </div>

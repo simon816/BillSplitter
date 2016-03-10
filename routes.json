@@ -1,4 +1,8 @@
 {
     "/": "home",
-    "/auth": "auth"
+    "/auth": "auth",
+    "/payment": "payment",
+    "/household": "household",
+    "/bills": "bill",
+    "/bill": "bill"
 }

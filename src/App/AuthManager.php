@@ -5,7 +5,11 @@ namespace App;
 class AuthManager {
 
     public static function isLoggedIn() {
-        return SessionManager::getInstance()->get('auth.userId') !== null;
+        return self::getUserId() !== null;
+    }
+
+    public static function getUserId() {
+        return SessionManager::getInstance()->get('auth.userId');
     }
 
     public static function login($email, $password) {

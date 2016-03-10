@@ -1,0 +1,46 @@
+{% title=Household %}
+
+{# head=
+    <link href="{% url /css/popup.css %}" rel="stylesheet">
+    <script src="{% url /js/popup.js %}"></script>
+    <script src="{% url /js/household.js %}"></script>
+#}
+
+{# body=
+    <div id="noHousehold" style="display: none;">
+        <h3>You are not a member of a household</h3>
+        <button id="joinButton">Join Household</button>
+        <button id="createButton">Create Household</button>
+    </div>
+
+    <div id="household">
+        <h2>Household Management</h2>
+        <h3 id="hhName"></h3>
+
+        <h4>Membership information</h4>
+        <table id="membersTable">
+            <thead>
+                <tr><th>Name</th><th>Bills Paid</th><th>Payment Needed</th><th>Default Proportion</th></tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <h4>Bill payment information</h4>
+        <div id="paymentInfo"></div>
+    </div>
+
+    <form id="joinPopup" method="POST" action="{% url /household/join %}">
+        <p>In order to join a group, you must enter the email of a user in the group</p>
+        <input type="email" name="email" placeholder="example@example.com">
+        <input type="submit" value="Request Join">
+    </form>
+
+    <form id="createPopup" method="POST" action="{% url /household/create %}">
+        <p>Create a household group</p>
+        <label>Name your household</label>
+        <input type="text" name="name">
+        <input type="submit" value="Create Household">
+    </form>
+#}
+{% include layout_auth %}

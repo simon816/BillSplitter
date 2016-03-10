@@ -3,9 +3,55 @@ PRAGMA encoding = "UTF-8";
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name varchar(30) NOT NULL,
-    email varchar(100) NOT NULL UNIQUE,
-    pass_hash char(128) NOT NULL,
-    salt char(128) NOT NULL,
-    reg_date timestamp DEFAULT CURRENT_TIMESTAMP
+    name varchar NOT NULL,
+    email varchar NOT NULL,
+    pass_hash varchar NOT NULL,
+    salt varchar NOT NULL,
+    reg_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS bills;
+CREATE TABLE bills (
+    id integer NOT NULL PRIMARY KEY AUTOINCREMENT NOT NULL,
+    total_payable float NOT NULL,
+    description text NOT NULL,
+    payable_to text NOT NULL,
+    paid boolean NOT NULL DEFAULT false
+);
+
+DROP TABLE IF EXISTS payments;
+CREATE TABLE payments (
+    user_id integer NOT NULL,
+    bill_id integer NOT NULL,
+    qty_paid float NOT NULL,
+    proportion float NOT NULL DEFAULT 1,
+    payment_received boolean NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (bill_id) REFERENCES bills(id)
+);
+
+DROP TABLE IF EXISTS household;
+CREATE TABLE household (
+    id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name varchar NOT NULL
+);
+
+DROP TABLE IF EXISTS household_bills;
+CREATE TABLE household_bills (
+    hh_id integer NOT NULL,
+    bill_id integer NOT NULL,
+
+    FOREIGN KEY (hh_id) REFERENCES household(id),
+    FOREIGN KEY (bill_id) REFERENCES bills(id)
+);
+
+DROP TABLE IF EXISTS household_member;
+CREATE TABLE household_member (
+    user_id integer NOT NULL,
+    hh_id integer NOT NULL,
+    default_proportion float NOT NULL DEFAULT 1,
+
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (hh_id) REFERENCES household(id)
 );

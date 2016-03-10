@@ -44,11 +44,56 @@ a.menu-item {
     margin-right: 10px;
 }
 
-#body-content {
-    margin: 50px 10px 10px;
+.user-welcome {
+    padding: 10px;
+    display: inline-block;
 }
 
 button, input[type="submit"] {
-    border-radius: 3px;
-    background: #ddd;
+    text-shadow: 1px 1px #3597bf;
+    border: 1px solid #55c0ec;
+    border-radius: 5px;
+    background-color: #77d0ec;
+    padding: 5px 10px;
+    line-height: 31px;
+	cursor: pointer;
+}
+button:hover, input[type="submit"]:hover {
+    border-color: #111;
+    background-color: #55c0ec;
+}
+
+#messageArea {
+    margin: 50px 0px 0px;
+}
+
+#messageArea .message {
+    border-radius: 5px;
+    box-shadow: 0 1px 1px #fff inset;
+    padding: 10px;
+    margin: 5px 0px;
+    display: table; /* Yes it's weird to use table but it works */
+}
+
+#body-content {
+}
+
+.message.conf {
+    background: #ebf8a4;
+    border: 1px solid #a2d246;
+}
+
+.message.error {
+    background: pink;
+    border: 1px solid maroon;
+}
+
+.message.warn {
+    background: orange;
+    border: 1px solid darkorange;
+}
+
+.message.info {
+    background: lightblue;
+    border: 1px solid blue;
 }

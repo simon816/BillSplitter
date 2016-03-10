@@ -22,11 +22,18 @@ class Database {
         return $this->con;
     }
 
+    private function failIfFalse($stmt) {
+        if ($stmt === false) {
+            throw new Exception($this->con->errorInfo()[2]);
+        }
+    }
+
     // WARNING! No validation is done here. Validation will be added in the future.
     public function insert($tableName, array $data) {
         $keys = array_keys($data);
         $querys = implode(', ', array_fill(0, count($data), '?'));
         $stmt = $this->con->prepare($q="INSERT INTO {$tableName} (" . implode(', ', $keys) . ") VALUES ({$querys})");
+        $this->failIfFalse($stmt);
         foreach ($keys as $i => $key) {
             $stmt->bindValue($i + 1, $data[$key]);
         }
@@ -82,12 +89,14 @@ class Database {
         foreach ($whereKeys as $i => $key) {
             $stmt->bindValue($whereOffset + $i + 1, $where[$key]);
         }
+        $this->failIfFalse($stmt);
         return $stmt;
     }
 
     // WARNING! This method is unsafe as no validation is applied to the query
     public function query($query, array $data = array()) {
         $stmt = $this->con->prepare($query);
+        $this->failIfFalse($stmt);
         foreach ($data as $i => $d) {
             $stmt->bindValue($i + 1, $d);
         }
@@ -104,6 +113,10 @@ class Database {
             return false;
         }
         return (int) $stmt->fetchColumn();
+    }
+
+    public function lastId($colName = 'id') {
+        return (int) $this->con->lastInsertId($colName);
     }
 
 }

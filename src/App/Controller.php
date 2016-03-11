@@ -92,7 +92,7 @@ abstract class Controller {
 
     protected function getGlobalVars() {
         $userId = AuthManager::getUserId();
-        $user = $userId !== null ? \UserManager::get($userId) : null;
+        $user = $userId !== null ? \UserManager::getName($userId) : null;
         return array(
             'user' => $user
         );
@@ -103,7 +103,7 @@ abstract class Controller {
     }
 
     protected function fail(\Exception $e, $code = 500) {
-        $this->handleError($code, $e->getMessage());
+        $this->handleError($code, $e);
     }
 
     protected function failJson(\Exception $e, $code = 500) {
@@ -143,7 +143,7 @@ abstract class Controller {
         }
     }
 
-    protected function validatePost($varName, $opt0 = null) {
+    protected function validatePost($varName, $opt0 = null, $opt1 = null) {
         if (!$this->isPost()) {
             $this->handleError(405);
         }
@@ -163,9 +163,20 @@ abstract class Controller {
             } elseif (is_string($opt0)) {
                 if ($opt0 === 'int') {
                     if (!ctype_digit($value)) {
-                        $this->handleError(400, "Post data {$varName} is not a valid integer");
+                        $this->handleError(400, "Post data '{$varName}' is not a valid integer");
                     }
                     $value = (int) $value;
+                    if (is_int($opt1) && $value < $opt1) {
+                        $this->handleError(400, "Post data '{$varName}' is smaller than the minimum of {$opt1}");
+                    }
+                } elseif ($opt0 === 'float') {
+                    if (!is_numeric($value) || $value != (string) (float) $value) {
+                        $this->handleError(400, "Post data '{$varName}' is not a valid float");
+                    }
+                    $value = (float) $value;
+                    if (is_float($opt1) && $value < $opt1) {
+                        $this->handleError(400, "Post data '{$varName}' is smaller than the minimum of {$opt1}");
+                    }
                 }
             }
         }

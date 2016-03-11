@@ -1,2 +1,18 @@
+{% title= Setup Bill %}
+
+{# body=
+    <!-- TODO: JSON and check belongs to household -->
+    <form action="{% url /bill/create %}" method="POST">
+        Bill Description:
+        <input type="text" name="desc" placeholder="Gas bill for Q1"><br>
+        Total Payable:
+        £<input type="number" step="0.01" name="total" min="0.01" placeholder="500.50"><br>
+        Payable to:
+        <input type="text" name="recipient" placeholder="Energy4u"><br>
+        <input type="submit" value="Add Bill">
+    </form>
+
+#}
+
 
 {% include layout_auth %}

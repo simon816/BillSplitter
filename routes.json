@@ -3,6 +3,6 @@
     "/auth": "auth",
     "/payment": "payment",
     "/household": "household",
-    "/bills": "bill",
-    "/bill": "bill"
+    "/bill": "bill",
+    "/settings": "settings"
 }

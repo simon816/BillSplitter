@@ -18,3 +18,8 @@ function addMessage(message, type) {
     messageDiv.append(dismiss);
     messageArea.append(messageDiv);
 }
+
+// Since it's used in several pages
+function messageNoHousehold() {
+    addMessage('You aren\'t a registered member of a household. Click "Household" on the navigation menu to create or join a household.', 'error');
+}

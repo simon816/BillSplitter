@@ -10,7 +10,7 @@ INSERT INTO users (name, email, pass_hash, salt) VALUES ('Simon', 'simonbarnes1@
     '958576c2ea8078716a76de13ea99473cefb275efa23ca214ec77d676ba2833799e5b28bd919c11fe51108aab76d6f062e4e0c250816942e56cb29235d1d7b760'
 );
 
-INSERT INTO household (name) VALUES ('Test Household');
+INSERT INTO households (name) VALUES ('Test Household');
 INSERT INTO household_member (user_id, hh_id) VALUES (1, 1);
 INSERT INTO household_member (user_id, hh_id) VALUES (2, 1);
 

@@ -63,6 +63,13 @@ button:hover, input[type="submit"]:hover {
     background-color: #55c0ec;
 }
 
+button[disabled] {
+    cursor: not-allowed;
+    background: lightgrey;
+    border-color: black;
+    text-shadow: none;
+}
+
 #messageArea {
     margin: 50px 0px 0px;
 }

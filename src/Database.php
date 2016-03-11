@@ -62,14 +62,15 @@ class Database {
     }
 
     // WARNING! No validation is done here. Validation will be added in the future.
-    public function update($table, array $newValues, array $where = null) {
+    public function update($table, array $newValues, array $where = null, $affectedRows = false) {
         $keys = implode(' = ?, ', array_keys($newValues)) . ' = ?';
         $values = array_values($newValues);
         $stmt = $this->generateWhereStatement("UPDATE {$table} SET {$keys}", $where, count($newValues));
         foreach ($values as $i => $value) {
             $stmt->bindValue($i + 1, $value);
         }
-        return $stmt->execute();
+        $success = $stmt->execute();
+        return !$success ? false : ($affectedRows ? $stmt->rowCount() : true);
     }
 
     // WARNING! No validation is done here. Validation will be added in the future.
@@ -86,10 +87,10 @@ class Database {
             $sql .= ' WHERE ' . implode(' = ? AND ', $whereKeys) . ' = ?';
         }
         $stmt = $this->con->prepare($sql);
+        $this->failIfFalse($stmt);
         foreach ($whereKeys as $i => $key) {
             $stmt->bindValue($whereOffset + $i + 1, $where[$key]);
         }
-        $this->failIfFalse($stmt);
         return $stmt;
     }
 

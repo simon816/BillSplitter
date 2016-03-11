@@ -13,9 +13,9 @@ class HouseholdModel {
 <<<SQL
 SELECT
     id, name,
-    (SELECT count(*) FROM bills JOIN household_bills ON hh_id = id WHERE paid = 1) AS paid,
-    (SELECT count(*) FROM bills JOIN household_bills ON hh_id = id WHERE paid = 0) AS due
-FROM household JOIN household_member ON household_member.hh_id = household.id WHERE user_id = ?
+    (SELECT count(*) FROM bills JOIN household_bill ON hh_id = id WHERE paid = 1) AS paid,
+    (SELECT count(*) FROM bills JOIN household_bill ON hh_id = id WHERE paid = 0) AS due
+FROM households JOIN household_member ON household_member.hh_id = households.id WHERE user_id = ?
 SQL
 , array($userId));
         if ($data === false || count($data) == 0) {
@@ -51,7 +51,7 @@ SQL
         if ($existing !== false && $existing > 0) {
             throw new Exception("User already has a membership with a household");
         }
-        if (!$this->db->insert('household', array('name' => $name))) {
+        if (!$this->db->insert('households', array('name' => $name))) {
             return false;
         }
         $id = $this->db->lastId();

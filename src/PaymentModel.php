@@ -9,31 +9,25 @@ class PaymentModel {
     }
 
     public function getPendingForUser($userId) {
-        $memCount = $this->db->count('household_member', array('user_id' => $userId));
-        if (!$memCount) {
-            return null;
+        $household = $this->db->selectSingle('hh_id', 'users', array('id' => $userId));
+        if (!$household || $household['hh_id'] == null) {
+            return null; // No household
         }
-        $data = $this->db->query('SELECT id, total_payable, description, payable_to, qty_paid, proportion FROM bills JOIN payments ON payments.bill_id = bills.id WHERE user_id = ? AND payment_received = 0', array($userId));
+        $data = $this->db->query('SELECT id, total_payable, description, payable_to, qty_paid, qty_owed FROM bills JOIN payments ON payments.bill_id = bills.id WHERE user_id = ? AND status = 0', array($userId));
         return array_map(function ($pending) {
             return array(
-                'id' => $pending['id'],
-                'total' => $pending['total_payable'],
+                'id' => (int) $pending['id'],
+                'total' => (float) $pending['total_payable'],
                 'description' => $pending['description'],
                 'payableTo' => $pending['payable_to'],
-                'quantityPaid' => $pending['qty_paid'],
-                'proportion' => $pending['proportion']
+                'quantityPaid' => (float) $pending['qty_paid'],
+                'quantityOwed' => (float) $pending['qty_owed']
             );
         }, $data);
     }
 
     public function makePayment($userId, $billId) {
-        // TODO Improve
-        $bill = $this->db->selectSingle('total_payable', 'bills', array('id' => $billId));
-        $payment = $this->db->selectSingle('proportion, qty_paid', 'payments', array('user_id' => $userId, 'bill_id' => $billId));
-        $affected = $this->db->update('payments',array(
-            'payment_received' => 1,
-            'qty_paid' => (float) $bill['total_payable'] * (float) $payment['proportion'] - (float) $payment['qty_paid']
-        ), array('user_id' => $userId, 'bill_id' => $billId), true);
+        $affected = $this->db->query('UPDATE payments SET qty_paid = qty_owed, paid_date = CURRENT_TIMESTAMP, status = 1 WHERE user_id = ? AND bill_id = ?', array($userId, $billId), true);
         if ($affected === false) {
             return false;
         }
@@ -44,17 +38,18 @@ class PaymentModel {
     }
 
     public function getHistoryForUser($userId) {
-        $memCount = $this->db->count('household_member', array('user_id' => $userId));
-        if (!$memCount) {
-            return null;
+        $household = $this->db->selectSingle('hh_id', 'users', array('id' => $userId));
+        if (!$household || $household['hh_id'] == null) {
+            return null; // No household
         }
-        $data = $this->db->query('SELECT total_payable, description, payable_to, qty_paid FROM bills JOIN payments ON payments.bill_id = bills.id WHERE user_id = ? AND payment_received = 1', array($userId));
+        $data = $this->db->query('SELECT total_payable, description, payable_to, qty_paid, payments.paid_date FROM bills JOIN payments ON payments.bill_id = bills.id WHERE user_id = ? AND status = 1', array($userId));
         return array_map(function ($pending) {
             return array(
                 'total' => $pending['total_payable'],
                 'description' => $pending['description'],
                 'payableTo' => $pending['payable_to'],
-                'quantityPaid' => $pending['qty_paid']
+                'quantityPaid' => $pending['qty_paid'],
+                'date' => strtotime($pending['paid_date'])
             );
         }, $data);
     }

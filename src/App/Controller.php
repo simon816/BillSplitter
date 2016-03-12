@@ -177,6 +177,10 @@ abstract class Controller {
                     if (is_float($opt1) && $value < $opt1) {
                         $this->handleError(400, "Post data '{$varName}' is smaller than the minimum of {$opt1}");
                     }
+                } elseif ($opt0 === 'array') {
+                    if (!is_array($value)) {
+                        $this->handleError(400, "Post data '{$varName}' is not an array");
+                    }
                 }
             }
         }

@@ -11,9 +11,8 @@ $.getJSON(ROOT + 'household/details')
                 var detailRow = details.members[i];
                 var row = mTableBody[0].insertRow(-1);
                 row.insertCell(-1).textContent = detailRow.name;
-                row.insertCell(-1).textContent = detailRow.payments_made;
-                row.insertCell(-1).textContent = detailRow.payments_due;
-                row.insertCell(-1).textContent = detailRow.default_proportion;
+                row.insertCell(-1).textContent = detailRow.paymentsMade;
+                row.insertCell(-1).textContent = detailRow.paymentsDue;
             }
             $('#paymentInfo').html('Bills Paid: ' + details.billsPaid + '<br> Bills Due: ' + details.billsDue);
         }

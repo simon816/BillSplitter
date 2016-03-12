@@ -26,6 +26,9 @@ class HouseholdController extends App\Controller {
             case 'join':
                 $this->handleJoin();
                 return true;
+            case 'members':
+                $this->handleListMembers();
+                return true;
         }
         return parent::handleAction($action, $args);
     }
@@ -52,8 +55,13 @@ class HouseholdController extends App\Controller {
         } catch (Exception $e) {
             $this->failJson($e, 400);
         }
-        // TODO
-        $this->checkSuccessJson($success, "");
+        $this->checkSuccessJson($success, "Failed to request joining that household");
+        http_response_code(204);
+    }
+
+    private function handleListMembers() {
+        $members = $this->loadModel('HouseholdModel')->getHousemates(AuthManager::getUserId());
+        $this->outputJson($members);
     }
 
 }

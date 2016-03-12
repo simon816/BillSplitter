@@ -15,29 +15,30 @@ $.getJSON(ROOT + 'payment/pending')
                 row.insertCell(-1).textContent = bill.description;
                 row.insertCell(-1).textContent = bill.payableTo;
                 row.insertCell(-1).textContent = '£' + bill.total;
-                row.insertCell(-1).textContent = (bill.proportion * 100) + '%';
                 row.insertCell(-1).textContent = '£' + bill.quantityPaid;
-                row.insertCell(-1).textContent = '£' + (bill.total * bill.proportion - bill.quantityPaid);
+                row.insertCell(-1).textContent = '£' + bill.quantityOwed;
 
-                var payButton = document.createElement('button');
-                payButton.textContent = 'Pay Now';
-                payButton.addEventListener('click', function (event) {
-                    event.target.disabled = true;
-                    $.get(ROOT + 'payment/make/' + bill.id)
-                    .success(function () {
-                        addMessage('Payment made!', 'conf');
-                        tbody.removeChild(row);
-                        if (tbody.children.length == 0) {
-                            $('#pending').hide();
-                            addMessage('You don\'t have any pending bills!');
-                        }
-                    })
-                    .fail(function () {
-                        addMessage('Payment failed!', 'error');
-                        event.target.disabled = false;
+                (function (bill, row) {
+                    var payButton = document.createElement('button');
+                    payButton.textContent = 'Pay Now';
+                    payButton.addEventListener('click', function (event) {
+                        event.target.disabled = true;
+                        $.get(ROOT + 'payment/make/' + bill.id)
+                        .success(function () {
+                            addMessage('Payment made!', 'conf');
+                            tbody.removeChild(row);
+                            if (tbody.children.length == 0) {
+                                $('#pending').hide();
+                                addMessage('You don\'t have any pending bills!');
+                            }
+                        })
+                        .fail(function () {
+                            addMessage('Payment failed!', 'error');
+                            event.target.disabled = false;
+                        });
                     });
-                });
-                row.insertCell(-1).appendChild(payButton);
+                    row.insertCell(-1).appendChild(payButton);
+                }) (bill, row);
             }
         }
     });

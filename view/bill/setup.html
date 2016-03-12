@@ -1,16 +1,29 @@
 {% title= Setup Bill %}
-
+{# head=
+    <link href="{% url /css/bill_setup.css %}" rel="stylesheet" type="text/css">
+    <script src="{% url /js/bill_setup.js %}"></script>
+#}
 {# body=
-    <!-- TODO: JSON and check belongs to household -->
-    <form action="{% url /bill/create %}" method="POST">
-        Bill Description:
-        <input type="text" name="desc" placeholder="Gas bill for Q1"><br>
-        Total Payable:
-        £<input type="number" step="0.01" name="total" min="0.01" placeholder="500.50"><br>
-        Payable to:
-        <input type="text" name="recipient" placeholder="Energy4u"><br>
-        <input type="submit" value="Add Bill">
-    </form>
+    <div>
+        <form action="{% url /bill/create %}" method="POST" id="billForm">
+            <label>Bill Description:</label>
+            <input type="text" name="desc" placeholder="Gas bill for Q1" size="50" class="inputBlock">
+            <label>Total Payable:</label>
+            <input type="number" step="0.01" name="total" min="0.01" placeholder="1000.00" class="inputBlock">
+            <label>Payable to:</label>
+            <input type="text" name="payTo" placeholder="Energy4u" class="inputBlock">
+            <h3>Split Between:</h3>
+            <table id="splitTable">
+                <thead>
+                    <tr><th>Split</th><th>Housemate</th><th>Proportion (%)</th><th>Money Owed</th></tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div id="splitError"></div>
+            <input type="submit" value="Add Bill">
+        </form>
+    </div>
 
 #}
 

@@ -22,7 +22,7 @@ class AuthManager {
         if ($hash !== $data['pass_hash']) {
             return array('success' => false, 'error' => array('password' => 'Incorrect password'));
         }
-        SessionManager::getInstance()->put('auth.userId', $data['id']);
+        SessionManager::getInstance()->put('auth.userId', (int) $data['id']);
         return array('success' => true);
     }
 
@@ -36,13 +36,39 @@ class AuthManager {
             }
             return array('success' => false, 'error' => array());
         }
-        $userId = $db->asPDO()->lastInsertId('id');
+        $userId = $db->lastId();
         SessionManager::getInstance()->put('auth.userId', $userId);
         return array('success' => true);
     }
 
     public static function logout() {
         SessionManager::getInstance()->remove('auth.userId');
+    }
+
+    public static function changeDetails($name, $email) {
+        if (!self::isLoggedIn()) {
+            throw new \Exception("Must be logged in");
+        }
+        $db = \Database::getInstance();
+        return $db->update('users', array('name' => $name, 'email' => $email), array('id' => self::getUserId()));
+    }
+
+    public static function changePassword($oldPass, $newPass) {
+        if (!self::isLoggedIn()) {
+            throw new \Exception("Must be logged in");
+        }
+        $db = \Database::getInstance();
+        $data = $db->selectSingle('id, pass_hash, salt', 'users', array('id' => self::getUserId()));
+        if (!$data) {
+            return false;
+        }
+        $hash = hash('sha512', $oldPass . $data['salt']);
+        if ($hash !== $data['pass_hash']) {
+            return 'Incorrect old password';
+        }
+        $newSalt = hash('sha512', $data['salt'] . uniqid(mt_rand(1, mt_getrandmax()), true));
+        $newHash = hash('sha512', $newPass . $newSalt);
+        return $db->update('users', array('pass_hash' => $newHash, 'salt' => $newSalt), array('id' => self::getUserId()));
     }
 
 }

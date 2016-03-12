@@ -63,7 +63,7 @@ button:hover, input[type="submit"]:hover {
     background-color: #55c0ec;
 }
 
-button[disabled] {
+button[disabled], input[type="submit"][disabled] {
     cursor: not-allowed;
     background: lightgrey;
     border-color: black;

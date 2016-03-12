@@ -95,7 +95,7 @@ class Database {
     }
 
     // WARNING! This method is unsafe as no validation is applied to the query
-    public function query($query, array $data = array()) {
+    public function query($query, array $data = array(), $affectedRows = false) {
         $stmt = $this->con->prepare($query);
         $this->failIfFalse($stmt);
         foreach ($data as $i => $d) {
@@ -104,7 +104,7 @@ class Database {
         if (!$stmt->execute()) {
             return false;
         }
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $affectedRows ? $stmt->rowCount() : $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // WARNING! No validation is done here. Validation will be added in the future.

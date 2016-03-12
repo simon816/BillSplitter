@@ -28,6 +28,8 @@ $(document).ready(function () {
         return true;
     }
 
+    // Login page:
+
     $('#loginform').on('submit', function (event) {
         var valid = true;
         valid = validateEmail(event.target.email.value, $('#emailError')) && valid;
@@ -38,6 +40,8 @@ $(document).ready(function () {
         }
         // Let the form process as default
     });
+
+    // Register page:
 
     $('#regform').on('submit', function (event) {
         var valid = true;
@@ -51,4 +55,26 @@ $(document).ready(function () {
         // Let the form process as default
     });
 
+    // Settings page:
+
+    $('#detailsForm').on('submit', function (event) {
+        var valid = true;
+        valid = validateName(event.target.name.value, $('#nameError')) && valid;
+        valid = validateEmail(event.target.email.value, $('#emailError')) && valid;
+        if (!valid) {
+            event.preventDefault();
+            return;
+        }
+        // Let the form process as default
+    });
+
+    $('#passwordForm').on('submit', function (event) {
+        var valid = true;
+        valid = validatePassword(event.target.oldpass.value, $('#oldPasswordError')) && valid;
+        valid = validatePassword(event.target.password.value, $('#passwordError')) && valid;
+        if (!valid) {
+            event.preventDefault();
+            return;
+        }
+    });
 });

@@ -1,0 +1,9 @@
+.inputBlock {
+    display: block;
+    padding: 3px 0px;
+    margin: 4px 0px 20px;
+}
+
+#splitError {
+    color: red;
+}

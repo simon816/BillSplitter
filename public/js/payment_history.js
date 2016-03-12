@@ -17,6 +17,7 @@ $.getJSON(ROOT + 'payment/history.json')
         row.insertCell(-1).textContent = payment.payableTo;
         row.insertCell(-1).textContent = '£' + payment.total;
         row.insertCell(-1).textContent = '£' + payment.quantityPaid;
+        row.insertCell(-1).textContent = new Date(payment.date * 1000).toLocaleString();
     }
 })
 .fail(function () {

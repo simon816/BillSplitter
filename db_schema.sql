@@ -6,25 +6,34 @@ CREATE TABLE users (
     name varchar NOT NULL,
     email varchar NOT NULL UNIQUE,
     pass_hash varchar NOT NULL,
-    salt varchar NOT NULL
+    salt varchar NOT NULL,
+    hh_id integer NULL,
+
+    FOREIGN KEY (hh_id) REFERENCES households(id)
 );
 
 DROP TABLE IF EXISTS bills;
 CREATE TABLE bills (
-    id integer NOT NULL PRIMARY KEY AUTOINCREMENT NOT NULL,
+    id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+    hh_id integer NOT NULL,
     total_payable float NOT NULL,
     description text NOT NULL,
     payable_to text NOT NULL,
-    paid boolean NOT NULL DEFAULT 0
+    collector integer NOT NULL,
+    paid_date timestamp NULL DEFAULT NULL,
+
+    FOREIGN KEY (hh_id) REFERENCES households(id),
+    FOREIGN KEY (collector) REFERENCES users(id)
 );
 
 DROP TABLE IF EXISTS payments;
 CREATE TABLE payments (
     user_id integer NOT NULL,
     bill_id integer NOT NULL,
-    qty_paid float NOT NULL,
-    proportion float NOT NULL DEFAULT 1,
-    payment_received boolean NOT NULL,
+    qty_paid float NOT NULL DEFAULT 0,
+    qty_owed float NOT NULL,
+    paid_date timestamp NULL DEFAULT NULL,
+    status integer NOT NULL DEFAULT 0,
 
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (bill_id) REFERENCES bills(id)
@@ -34,23 +43,4 @@ DROP TABLE IF EXISTS households;
 CREATE TABLE households (
     id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
     name varchar NOT NULL
-);
-
-DROP TABLE IF EXISTS household_bill;
-CREATE TABLE household_bill (
-    hh_id integer NOT NULL,
-    bill_id integer NOT NULL,
-
-    FOREIGN KEY (hh_id) REFERENCES households(id),
-    FOREIGN KEY (bill_id) REFERENCES bills(id)
-);
-
-DROP TABLE IF EXISTS household_member;
-CREATE TABLE household_member (
-    user_id integer NOT NULL,
-    hh_id integer NOT NULL,
-    default_proportion float NOT NULL DEFAULT 1,
-
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (hh_id) REFERENCES households(id)
 );

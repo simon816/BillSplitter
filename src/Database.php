@@ -24,7 +24,8 @@ class Database {
 
     private function failIfFalse($stmt) {
         if ($stmt === false) {
-            throw new Exception($this->con->errorInfo()[2]);
+            $error = $this->con->errorInfo();
+            throw new Exception($error[2]);
         }
     }
 

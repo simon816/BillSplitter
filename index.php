@@ -1,5 +1,9 @@
 <?php
 
+date_default_timezone_set('Europe/London');
+
+ob_start('ob_gzhandler');
+
 set_error_handler(function ($severity, $message, $file, $line, $args) {
         throw new ErrorException($message, 1, $severity, $file, $line);
 });
@@ -26,12 +30,23 @@ function routeRequest($route) {
     if (strlen($route) > 0 && $route{0} != '/') {
         $route = "/{$route}";
     }
+    $file = PUBLIC_DIR . $route;
     // Public file response (in case .htaccess is not used)
-    if (is_file(PUBLIC_DIR . $route)) {
+    if (is_file($file)) {
+        $mTime = filemtime($file);
+        $etag = md5_file($file);
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $mTime) . ' GMT');
+        header("Etag: {$etag}");
+
         // css seems to be detected as text/plain
-        $type = strpos($route, '/css/') === 0 ? 'text/css' : mime_content_type(PUBLIC_DIR . $route);
+        $type = strpos($route, '/css/') === 0 ? 'text/css' : mime_content_type($file);
         header("Content-Type: $type");
-        readfile(PUBLIC_DIR . $route);
+        if ((isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)
+            || (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $mTime)) {
+            http_response_code(304);
+        } else {
+            readfile(PUBLIC_DIR . $route);
+        }
         return;
     }
     $routes = json_decode(file_get_contents(ROUTES));

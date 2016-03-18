@@ -1,11 +1,12 @@
 $.getJSON(ROOT + 'household/members')
 .success(function (members) {
     $(document).ready(function() {
+        var form = $('#billForm');
         if (members === null) {
             messageNoHousehold();
+            form.hide();
             return;
         }
-        var form = $('#billForm');
         var split = $('#splitTable tbody')[0];
 
         var propTracker = {};

@@ -18,7 +18,7 @@ class BillModel {
 
     public function addNewBill($userId, $description, $totalPayable, $payableTo, array $split) {
         $hhId = $this->userIdToHhId($userId);
-        $propTotal = 0;
+        $propTotal = 0.0;
         foreach ($split as $id => $prop) {
             $propTotal += $prop;
         }
@@ -41,11 +41,13 @@ class BillModel {
             if (!array_key_exists($userId, $membersById)) {
                 throw new Exception("User ID {$userId} does not exist or is not part of the household");
             }
+            $qty = $totalPayable * $proportion;
             $this->db->insert('payments', array(
                 'user_id' => $userId,
                 'bill_id' => $billId,
-                'qty_owed' => $totalPayable * $proportion
+                'qty_owed' => $qty
             ));
+            Notifications::pushNotification($userId, "A new bill has been added, you owe £{$qty}", Notifications::NEW_BILL);
         }
         return true;
     }
@@ -64,7 +66,7 @@ class BillModel {
                     'name' => $payment['name'],
                     'quantityPaid' => (float) $payment['qty_paid'],
                     'quantityOwed' => (float) $payment['qty_owed'],
-                    'received' => (int) $payment['status'] != 0
+                    'confirmed' => ((int) $payment['status']) === 3
                 );
             }, $payees);
             return array(
@@ -80,12 +82,27 @@ class BillModel {
 
     public function confirmPayment($userId, $billId) {
         $hhId = $this->userIdToHhId($userId);
+        $statuses = $this->db->select('status, user_id', 'payments', array('bill_id' => $billId));
+        if ($statuses === false) {
+            return false;
+        }
+        $userIds = array();
+        foreach ($statuses as $userStatus) {
+            if ((int) $userStatus['status'] !== 3) {
+                throw new Exception("A user has not been confirmed to have paid.");
+            }
+            $userIds[] = (int) $userStatus['user_id'];
+        }
         $affected = $this->db->query('UPDATE bills SET paid_date = CURRENT_TIMESTAMP WHERE hh_id = ? AND id = ? AND collector = ?', array($hhId, $billId, $userId), true);
         if ($affected === false) {
             return false;
         }
         if ($affected < 1) {
             throw new Exception("Either this bill does not exist, or you're not the collector of the money for it");
+        }
+        $billDesc = $this->db->selectSingle('description', 'bills', array('id' => $billId));
+        foreach ($userIds as $participantId) {
+            Notifications::pushNotification($participantId, "Payment for the bill '{$billDesc['description']}' has been confirmed", Notifications::BILL_CONFIRMED);
         }
         return true;
     }

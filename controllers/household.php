@@ -29,6 +29,9 @@ class HouseholdController extends App\Controller {
             case 'members':
                 $this->handleListMembers();
                 return true;
+            case 'leave':
+                $this->handleLeave();
+                return true;
         }
         return parent::handleAction($action, $args);
     }
@@ -62,6 +65,16 @@ class HouseholdController extends App\Controller {
     private function handleListMembers() {
         $members = $this->loadModel('HouseholdModel')->getHousemates(AuthManager::getUserId());
         $this->outputJson($members);
+    }
+
+    private function handleLeave() {
+        try {
+            $success = $this->loadModel('HouseholdModel')->leaveHousehold(AuthManager::getUserId());
+        } catch (Exception $e) {
+            $this->failJson($e);
+        }
+        $this->checkSuccessJson($success, "Failed to leave household");
+        http_response_code(204);
     }
 
 }

@@ -1,7 +1,26 @@
-$.getJSON(ROOT + 'bill/list')
-.success(function (bills) {
-    $(document).ready(function() {
+(function () {
+    function updateActive() {
+        $.getJSON(ROOT + 'bill/list')
+        .success(function (bills) {
+            $(document).ready(function () {
+                handleData(bills);
+            });
+        })
+        .fail(function (xhr) {
+            $('#billTable').hide();
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                if (xhr.responseJSON.error.code === 100) {
+                    messageNoHousehold();
+                    return;
+                }
+            }
+            addMessage('Failed to load bill data', 'error');
+        });
+    }
+
+    function handleData(bills) {
         var tableBody = $('#billTable tbody');
+        tableBody.children().remove();
         for (var i = 0; i < bills.length; i++) {
             var bill = bills[i];
             var row = tableBody[0].insertRow(-1);
@@ -36,7 +55,7 @@ $.getJSON(ROOT + 'bill/list')
                 userRow.insertCell(-1).textContent = payee.name;
                 userRow.insertCell(-1).textContent = '£' + payee.quantityOwed;
                 userRow.insertCell(-1).textContent = '£' + payee.quantityPaid;
-                allPaid &= payee.quantityOwed == payee.quantityPaid;
+                allPaid &= payee.confirmed;
             }
             var collectorCell = row.insertCell(-1);
             $(collectorCell).append($('<div>', {text: bill.collector.name}));
@@ -58,15 +77,17 @@ $.getJSON(ROOT + 'bill/list')
                 $(collectorCell).append(confButton);
             }
         }
-    });
-})
-.fail(function (xhr, textStatus, error) {
-    $('#billTable').hide();
-    if (xhr.responseJSON && xhr.responseJSON.error) {
-        if (xhr.responseJSON.error.code === 100) {
-            messageNoHousehold();
-            return;
-        }
     }
-    addMessage('Failed to load bill data', 'error');
-});
+
+    updateActive();
+
+    $(window).on('notifications', function (event, notifications) {
+        var update = false;
+        for (var i = 0; i < notifications.length; i++) {
+            update = update || [2, 7].indexOf(notifications[i].type) != -1;
+        }
+        if (update) {
+            updateActive();
+        }
+    });
+}) ();

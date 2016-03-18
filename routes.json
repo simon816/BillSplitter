@@ -4,5 +4,6 @@
     "/payment": "payment",
     "/household": "household",
     "/bill": "bill",
-    "/settings": "settings"
+    "/settings": "settings",
+    "/notifications": "notifications"
 }

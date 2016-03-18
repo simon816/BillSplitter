@@ -104,3 +104,25 @@ button[disabled], input[type="submit"][disabled] {
     background: lightblue;
     border: 1px solid blue;
 }
+
+button.red {
+    background: #F5778D;
+    border-color: #EC5555;
+    text-shadow: 1px 1px #B39292;
+}
+button.red:hover {
+    background: #DA697D;
+    border-color: #111;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 3px;
+}

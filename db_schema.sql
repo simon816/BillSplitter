@@ -42,5 +42,18 @@ CREATE TABLE payments (
 DROP TABLE IF EXISTS households;
 CREATE TABLE households (
     id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name varchar NOT NULL
+    name varchar NOT NULL,
+    owner integer NOT NULL,
+
+    FOREIGN KEY (owner) REFERENCES users(id)
+);
+
+DROP TABLE IF EXISTS notifications;
+CREATE TABLE notifications (
+    id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+    receiver_id integer NOT NULL,
+    message text NOT NULL,
+    type_id integer NOT NULL, -- Tells PHP what this message is about
+
+    FOREIGN KEY (receiver_id) REFERENCES users(id)
 );

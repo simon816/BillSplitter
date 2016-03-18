@@ -1,5 +1,5 @@
 
-function addMessage(message, type) {
+function addMessage(message, type, onDismiss) {
     type = type || 'info';
     var messageArea = $('#messageArea');
     var messageDiv = $('<div>', {'class': type + ' message'});
@@ -10,7 +10,9 @@ function addMessage(message, type) {
         'on': {
             'click': function (event) {
                 event.preventDefault();
-                messageDiv.remove();
+                if (!onDismiss || (onDismiss && onDismiss.call(window))) {
+                    messageDiv.remove();
+                }
             }
         }
     });

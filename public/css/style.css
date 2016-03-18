@@ -44,6 +44,10 @@ a.menu-item {
     margin-right: 10px;
 }
 
+.menu-left {
+    float: left;
+}
+
 .user-welcome {
     padding: 10px;
     display: inline-block;
@@ -125,4 +129,60 @@ table, th, td {
 
 th, td {
     padding: 3px;
+}
+
+
+@media only screen and (max-width: 1220px) {
+    .menu {
+        margin: 0px 5%;
+    }
+}
+
+@media only screen and (max-width: 1080px) {
+    .menu {
+        margin: 0px 0px;
+    }
+}
+
+@media only screen and (max-width: 980px) {
+    .menu-item {
+        padding: 10px;
+        margin: 0 0px;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .menu-item {
+        float: left;
+        clear: both;
+        width: 90%;
+    }
+    .user-welcome {
+        display: block;
+    }
+
+    .menu-left, .menu-right {
+        background-color: #dbdbdb;
+        display: none;
+    }
+
+    .menu:before, .menu:after {
+        content: "Menu";
+        display: inline-block;
+        padding: 10px;
+        margin: 0 5px;
+        color: #000;
+        text-shadow: 1px 1px #f0f0f0;
+    }
+    .menu:after {
+        content: "Settings";
+        float: right;
+    }
+
+    .topbar:hover .menu:before, .topbar:hover .menu:after {
+        content: "";
+    }
+    .topbar:hover .menu-left, .topbar:hover .menu-right {
+        display: block;
+    }
 }

@@ -11,6 +11,10 @@ input[type="submit"] {
     margin-top: 10px;
 }
 
+input[type="checkbox"], input[type="checkbox"] + label {
+    display: inline;
+}
+
 .error {
     color: red;
 }

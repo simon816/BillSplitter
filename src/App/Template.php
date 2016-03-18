@@ -34,8 +34,8 @@ class Template {
     }
 
     private function replaceTags($content) {
-        $content = preg_replace_callback('/\{#\s*(.+?)\s*#\}/s', array($this, 'handleReplace'), $content);
-        $content = preg_replace_callback('/\{%\s*(.+?)\s*%\}/s', array($this, 'handleReplace'), $content);
+        $content = preg_replace_callback('/[\r\n]?\{#\s*(.+?)\s*#\}[\r\n]?/s', array($this, 'handleReplace'), $content);
+        $content = preg_replace_callback('/[\r\n]?\{%\s*(.+?)\s*%\}[\r\n]?/s', array($this, 'handleReplace'), $content);
         return $content;
     }
 

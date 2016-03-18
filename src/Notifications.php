@@ -10,6 +10,8 @@ class Notifications {
     const PAYMENT_DENIED = 6;
     const BILL_CONFIRMED = 7;
 
+    const CHAT = -1;
+
     public static function pushNotification($toUser, $message, $type) {
         $db = Database::getInstance();
         $db->insert('notifications', array(
@@ -17,9 +19,40 @@ class Notifications {
             'message' => $message,
             'type_id' => $type
         ));
-        $email = $db->selectSingle('email', 'users', array('id' => $toUser));
-        if ($email) {
-            self::sendMail($email['email'], $message);
+        // TODO chat needs to be redone
+        if ($type == self::CHAT) {
+            return;
+        }
+        $userDetails = UserManager::getDetails($toUser);
+        if ($userDetails) {
+            if (self::prefAllowEmail($userDetails['prefs'], $type)) {
+                self::sendMail($userDetails['email'], $message);
+            }
+        }
+    }
+
+    private static function prefAllowEmail($prefs, $type) {
+        if (!isset($prefs['notifications'])) {
+            return true; // Default enable
+        }
+        $n = $prefs['notifications'];
+        switch ($type) {
+            case self::REQ_JOIN_HOUSEHOLD:
+                return isset($n['reqJoin']) && $n['reqJoin'];
+            case self::NEW_BILL:
+                return isset($n['newBill']) && $n['newBill'];
+            case self::PAYMENT_MADE:
+                return isset($n['pmtMade']) && $n['pmtMade'];
+            case self::PAYMENT_CANCELLED:
+                return isset($n['pmtCncl']) && $n['pmtCncl'];
+            case self::PAYMENT_CONFIRMED:
+                return isset($n['pmtAcpt']) && $n['pmtAcpt'];
+            case self::PAYMENT_DENIED:
+                return isset($n['pmtDeny']) && $n['pmtDeny'];
+            case self::BILL_CONFIRMED:
+                return isset($n['billCnf']) && $n['billCnf'];
+            default:
+                return true;
         }
     }
 

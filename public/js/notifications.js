@@ -23,7 +23,9 @@
         $(window).triggerHandler('notifications', [notifications]);
         for (var i = 0; i < notifications.length; i++) {
             $(window).triggerHandler('notification', [notifications[i]]);
-            showNotification(notifications[i]);
+            if (notifications[i].type != -1) { // TODO for chat
+                showNotification(notifications[i]);
+            }
         }
     }
 

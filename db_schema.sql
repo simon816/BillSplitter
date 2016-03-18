@@ -8,6 +8,7 @@ CREATE TABLE users (
     pass_hash varchar NOT NULL,
     salt varchar NOT NULL,
     hh_id integer NULL,
+    prefs text NOT NULL DEFAULT "{}",
 
     FOREIGN KEY (hh_id) REFERENCES households(id)
 );

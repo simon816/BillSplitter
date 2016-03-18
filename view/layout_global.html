@@ -4,6 +4,7 @@
         <title>{% =title %}</title>
         <meta charset="UTF-8">
         <link href="{% url /css/style.css %}" rel="stylesheet" type="text/css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script>window.ROOT = '{% url / %}';</script>
         <script src="{% url /js/jquery.js %}"></script>
         <script src="{% url /js/global.js %}"></script>
@@ -13,9 +14,10 @@
         <header>
             <div class="topbar">
                 <nav class="menu">
-                    <div>
-                    <a class="menu-item" href="{% url / %}">Home</a>
-                    {% =html.navbar|html %}
+                    <div class="menu-left">
+                        <a class="menu-item" href="{% url / %}">Home</a>
+                        {% =html.navbar|html %}
+                    </div>
                     <div class="menu-right">
                         {% =html.navbar_right|html %}
                     </div>

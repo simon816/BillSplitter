@@ -38,6 +38,7 @@
             var payeesCell = row2.insertCell(-1);
             payeesCell.setAttribute('colspan', 4);
             var payeesTable = document.createElement('table');
+            payeesTable.style.background = '#EEE';
             payeesCell.appendChild(payeesTable);
             var pHead = document.createElement('thead');
             payeesTable.appendChild(pHead);
@@ -51,7 +52,6 @@
             for (var j = 0; j < bill.payees.length; j++) {
                 var payee = bill.payees[j];
                 var userRow = pBody.insertRow(-1);
-                userRow.style.background = 'lightblue';
                 userRow.insertCell(-1).textContent = payee.name;
                 userRow.insertCell(-1).textContent = '£' + payee.quantityOwed;
                 userRow.insertCell(-1).textContent = '£' + payee.quantityPaid;

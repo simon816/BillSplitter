@@ -4,6 +4,8 @@ use App\AuthManager;
 
 class SettingsController extends App\Controller {
 
+    private static $prefNames = array('reqJoin', 'newBill', 'pmtMade', 'pmtCncl', 'pmtAcpt', 'pmtDeny', 'billCnf');
+
     public function __construct() {
         parent::__construct('settings/index');
     }
@@ -15,12 +17,23 @@ class SettingsController extends App\Controller {
     protected function getGlobalVars() {
         $details = \UserManager::getDetails(AuthManager::getUserId());
         $error = App\SessionManager::getInstance()->get('settings.error');
-        var_dump($error);
         App\SessionManager::getInstance()->remove('settings.error');
+        if (isset($details['prefs']['notifications'])) {
+            $prefs = $details['prefs']['notifications'];
+        } else {
+            $prefs = array();
+            foreach (self::$prefNames as $pref) {
+                $prefs[$pref] = true;
+            }
+        }
+        $notifications = array_map(function ($emailPref) {
+            return $emailPref ? 'checked' : '';
+        }, $prefs);
         return array(
             'error' => $error,
             'user' => $details['name'],
-            'email' => $details['email']
+            'email' => $details['email'],
+            'notification' => $notifications
         );
     }
 
@@ -47,7 +60,12 @@ class SettingsController extends App\Controller {
             $error['email'] = 'Invalid email address';
             App\SessionManager::getInstance()->put('settings.error', $error);
         } else {
+            $emailPrefs = array();
+            foreach (self::$prefNames as $field) {
+                $emailPrefs[$field] = isset($_POST[$field]) && filter_var($_POST[$field], FILTER_VALIDATE_BOOLEAN);
+            }
             AuthManager::changeDetails($name, $email);
+            \UserManager::updatePreferences(AuthManager::getUserId(), array('notifications' => $emailPrefs));
         }
         $this->redirect('/settings', 303);
     }

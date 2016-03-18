@@ -12,6 +12,15 @@
         <label>Your Email</label>
         <div class="error" id="emailError">{% =error.email %}</div>
         <input type="email" value="{% =email %}" name="email">
+
+        <h4>Email Notifications</h4>
+        <div><input type="checkbox" id="nReqJoin" name="reqJoin" {% =notification.reqJoin %}><label for="nReqJoin">When a user requests to join my household (only for owner)</label></div>
+        <div><input type="checkbox" id="nNewBill" name="newBill" {% =notification.newBill %}><label for="nNewBill">When new bill is added</label></div>
+        <div><input type="checkbox" id="nPmtMade" name="pmtMade" {% =notification.pmtMade %}><label for="nPmtMade">When a housemate makes a payment to my bill</label></div>
+        <div><input type="checkbox" id="nPmtCncl" name="pmtCncl" {% =notification.pmtCncl %}><label for="nPmtCncl">When a housemate cancelled a payment to my bill</label></div>
+        <div><input type="checkbox" id="nPmtAcpt" name="pmtAcpt" {% =notification.pmtAcpt %}><label for="nPmtAcpt">When the collector of a bill accepts my payment</label></div>
+        <div><input type="checkbox" id="nPmtDeny" name="pmtDeny" {% =notification.pmtDeny %}><label for="nPmtDeny">When the collector of a bill denies my payment</label></div>
+        <div><input type="checkbox" id="nBillCnf" name="billCnf" {% =notification.billCnf %}><label for="nBillCnf">When a bill that I paid part of is confirmed to have been paid</label></div>
         <input type="submit" value="Update">
     </form>
 

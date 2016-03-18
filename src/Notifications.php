@@ -19,8 +19,7 @@ class Notifications {
         ));
         $email = $db->selectSingle('email', 'users', array('id' => $toUser));
         if ($email) {
-            // Uncomment to enable
-            // sendMail($email['email'], $message);
+            self::sendMail($email['email'], $message);
         }
     }
 
@@ -33,7 +32,7 @@ class Notifications {
             $headerString .= "{$key}: {$value}\r\n";
         }
         $headerString .= "\r\n";
-        return mail($address, 'Notification from Bill Splitter', $messaage, $headerString);
+        return mail($address, 'Notification from Bill Splitter', $message, $headerString);
     }
 
     public static function getNotificationsFor($userId, $minId = 0) {

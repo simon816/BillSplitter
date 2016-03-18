@@ -71,7 +71,7 @@ class HouseholdController extends App\Controller {
         try {
             $success = $this->loadModel('HouseholdModel')->leaveHousehold(AuthManager::getUserId());
         } catch (Exception $e) {
-            $this->failJson($e);
+            $this->failJson($e, 400);
         }
         $this->checkSuccessJson($success, "Failed to leave household");
         http_response_code(204);
